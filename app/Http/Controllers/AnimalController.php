@@ -12,8 +12,10 @@ class AnimalController extends Controller
      */
     public function index()
     {
-        //
-        return "esto es el index :)";
+        //1. Pido al modelo que busque todos los animales en la BD
+        $animals = Animal::all();   
+        //2. Creo una vista con dichos animales
+        return view('animal.index', compact('animals'));
     }
 
     /**
@@ -46,7 +48,7 @@ class AnimalController extends Controller
      */
     public function edit(Animal $animal)
     {
-        //
+        return view('animal.edit', compact('animal'));
     }
 
     /**
@@ -54,7 +56,7 @@ class AnimalController extends Controller
      */
     public function update(Request $request, Animal $animal)
     {
-        //
+        //Esto lo hacemos mañana :)
     }
 
     /**
