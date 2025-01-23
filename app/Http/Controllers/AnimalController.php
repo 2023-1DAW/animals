@@ -23,8 +23,8 @@ class AnimalController extends Controller
      */
     public function create()
     {
-        //
-        return "aquí irá una vista con un formulario de creación";
+        // Aquí suministro una vista con un formulario en blanco de creación
+        return view('animal.create');
     }
 
     /**
@@ -32,7 +32,9 @@ class AnimalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Aquí guardo el modelo en la BD
+        Animal::create($request->all());
+        return redirect()->route('animal.index')->with('success', 'Animal created');
     }
 
     /**
@@ -41,6 +43,7 @@ class AnimalController extends Controller
     public function show(Animal $animal)
     {
         //
+        return view('animal.show', compact('animal'));
     }
 
     /**
@@ -56,7 +59,10 @@ class AnimalController extends Controller
      */
     public function update(Request $request, Animal $animal)
     {
-        //Esto lo hacemos mañana :)
+        //$request contiene los datos del formulario
+        $animal->update($request->all());
+        //Reenviamos al index:
+        return redirect()->route('animal.index')->with('success', 'Animal updated');
     }
 
     /**
@@ -65,5 +71,7 @@ class AnimalController extends Controller
     public function destroy(Animal $animal)
     {
         //
+        $animal->delete();
+        return redirect()->route('animal.index')->with('success', 'Animal deleted');
     }
 }
