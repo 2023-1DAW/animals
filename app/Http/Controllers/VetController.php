@@ -7,12 +7,17 @@ use Illuminate\Http\Request;
 
 class VetController extends Controller
 {
+
+    public function mostrar(){
+        return "hola :)";
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $vets = Vet::all(); //Pido al modelo todos los Vets
+        return view('vet.index', compact('vets'));
     }
 
     /**
