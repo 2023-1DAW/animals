@@ -39,8 +39,8 @@ class VetController extends Controller
         $v = Vet::where('name', $name)->get();
         if (sizeof($v) != 0) {
             return redirect()->route('vet.create')->with('error', 'Vet name already exists');
-        }
-        *///Este código de arriba se puede poner como regla en validate: unique:vets,name
+        }*/
+        //Este código de arriba se puede poner como regla en validate: unique:vets,name
         //Validar los datos:
         $request->validate([
             'name' => 'required|min:3|unique:vets,name',

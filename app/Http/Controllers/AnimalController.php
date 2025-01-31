@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Animal;
+use App\Models\Owner;
 use Illuminate\Http\Request;
 
 class AnimalController extends Controller
@@ -32,8 +33,27 @@ class AnimalController extends Controller
      */
     public function store(Request $request)
     {
+        //$description = $request->input('description');
+        //$input = $request->collect(['description','otra']);
+        //var_dump($request->input('otra'));
+        //var_dump($input);
+        //exit();
         // Aquí guardo el modelo en la BD
-        Animal::create($request->all());
+        //Animal::create($request->all());
+        //Animal::create($request->collect(['name','description','weight','age'])->toArray());
+
+        //Primero tengo que crear el animal:
+        $animal = Animal::create($request->all());
+
+        //Después tengo que crear el propietario:
+        //Opción 1: crear un objeto Owner, meterle en sus atributos los datos del formulario, guardar en bd
+        $owner = new Owner();
+        $owner->name = $request->input('ownername');
+        $owner->phone = $request->input('ownerphone');
+        $owner->animal()->associate($animal);
+        $owner->save();
+
+        //Redirecciono a index
         return redirect()->route('animal.index')->with('success', 'Animal created');
     }
 

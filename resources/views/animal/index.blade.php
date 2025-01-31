@@ -24,7 +24,7 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text">{{ $animal->weight }} kg. {{ $animal->age }} años.
-                            {{ $animal->description }}
+                            {{ $animal->description }} - {{$animal->created_at}} {{$animal->updated_at}} {{$animal->id}}
                         </p>
                     </div>
                     <div class="card-footer">

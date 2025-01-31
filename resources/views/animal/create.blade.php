@@ -32,6 +32,15 @@
                 <label for="description">Description</label>
                 <input type="text" class="form-control" name="description">
             </div>
+            <div class="form-group">
+                <label for="ownername">Owner's name</label>
+                <input type="text" class="form-control" name="ownername">
+            </div>
+            <div class="form-group">
+                <label for="ownerphone">Owner's phone</label>
+                <input type="text" class="form-control" name="ownerphone">
+            </div>
+            
 
             <button type="submit" class="btn btn-primary mt-3">Create</button>
         </form>
