@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Animal;
 use App\Models\Owner;
+use App\Models\Vet;
 use Illuminate\Http\Request;
 
 class AnimalController extends Controller
@@ -25,7 +26,11 @@ class AnimalController extends Controller
     public function create()
     {
         // Aquí suministro una vista con un formulario en blanco de creación
-        return view('animal.create');
+        //Buscar todos los veterinarios
+        $vets = Vet::all();
+
+        //Se lo envío a la vista:
+        return view('animal.create', compact('vets'));
     }
 
     /**
