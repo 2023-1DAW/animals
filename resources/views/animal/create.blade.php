@@ -11,6 +11,8 @@
 
 <body>
     @include('navbar')
+    <?php //var_dump($vets);?>
+   
     <!-- contenido (formulario de edición del animal) -->
     <div class="container">
         <form action={{route('animal.store')}} method="post">

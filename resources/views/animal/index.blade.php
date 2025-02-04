@@ -12,6 +12,7 @@
 <body>
     <!-- Barra de menú -->
     @include('navbar')
+    <?php //var_dump($animals); ?>
 
     <!-- contenido (tarjetas con los animales) -->
     <div class="container mt-5">

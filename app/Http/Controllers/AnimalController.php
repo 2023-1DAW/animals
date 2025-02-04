@@ -84,6 +84,7 @@ class AnimalController extends Controller
      */
     public function update(Request $request, Animal $animal)
     {
+        
         //$request contiene los datos del formulario
         $animal->update($request->all());
         //Reenviamos al index:
@@ -95,7 +96,8 @@ class AnimalController extends Controller
      */
     public function destroy(Animal $animal)
     {
-        //
+        //Primero tengo que eliminar el propietario:
+        $animal->owner->delete();
         $animal->delete();
         return redirect()->route('animal.index')->with('success', 'Animal deleted');
     }

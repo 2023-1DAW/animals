@@ -34,6 +34,14 @@
                 <label for="description">Description</label>
                 <input type="text" class="form-control" name="description" value={{$animal->description}}>
             </div>
+            <div class="form-group">
+                <label for="description">Owner's name</label>
+                <input type="text" class="form-control" name="ownername" value={{$animal->owner->name}}>
+            </div>
+            <div class="form-group">
+                <label for="description">Owner's phone</label>
+                <input type="text" class="form-control" name="ownerphone" value={{$animal->owner->phone}}>
+            </div>
 
             <button type="submit" class="btn btn-primary mt-3">Edit</button>
         </form>

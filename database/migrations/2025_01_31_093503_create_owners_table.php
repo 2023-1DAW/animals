@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('phone')->nullable();
-            $table->foreignId('animal_id')->constrained();
+            $table->foreignId('animal_id')->constrained()->onDelete('cascade');
         });
     }
 
