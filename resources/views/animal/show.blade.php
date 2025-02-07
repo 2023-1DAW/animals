@@ -34,7 +34,14 @@
                 <label for="description">Description</label>
                 <input type="text" class="form-control" name="description" value={{$animal->description}} disabled>
             </div>
-
+            <div class="form-group">
+                <label for="ownername">Owner</label>
+                <input type="text" class="form-control" name="ownername" value="{{$animal->owner->name}} - Phone: {{$animal->owner->phone}}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="vet">Vet</label>
+                <input type="text" class="form-control" name="vet" value="{{$animal->vet->name}} - Email: {{$animal->vet->email}} - Phone: {{$animal->vet->phone}}" disabled>
+            </div>
             <button type="submit" class="btn btn-primary mt-3">Return</button>
         </form>
     </div>

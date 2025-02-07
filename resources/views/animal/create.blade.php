@@ -11,8 +11,9 @@
 
 <body>
     @include('navbar')
-    <?php //var_dump($vets);?>
-   
+    <?php //var_dump($vets);
+    ?>
+
     <!-- contenido (formulario de edición del animal) -->
     <div class="container">
         <form action={{route('animal.store')}} method="post">
@@ -42,7 +43,16 @@
                 <label for="ownerphone">Owner's phone</label>
                 <input type="text" class="form-control" name="ownerphone">
             </div>
-            
+            <div class="form-group">
+                <label for="vets">Vet</label>
+                <select name="vets" class="form-select" aria-label="Default select example">
+                    <option value="" selected>Clear selection</option>
+                    @foreach ($vets as $v)
+                        <option value="{{$v->id}}">{{$v->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+
 
             <button type="submit" class="btn btn-primary mt-3">Create</button>
         </form>

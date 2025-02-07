@@ -12,7 +12,6 @@
 <body>
     <!-- Barra de menú -->
     @include('navbar')
-    <?php //var_dump($animals); ?>
 
     <!-- contenido (tarjetas con los animales) -->
     <div class="container mt-5">
@@ -25,7 +24,7 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text">{{ $animal->weight }} kg. {{ $animal->age }} años.
-                            {{ $animal->description }} - {{$animal->created_at}} {{$animal->updated_at}} {{$animal->id}}
+                            {{ $animal->description }}
                         </p>
                     </div>
                     <div class="card-footer">
@@ -42,7 +41,7 @@
                                 </form>
                             </div>
                             <div class="col-sm">
-                                <a href="{{route('animal.show', $animal) }}" class="btn btn-success btn-sm">Show</a>
+                                <a href="{{route('animal.show', $animal->id) }}" class="btn btn-success btn-sm">Show</a>
                             </div>
                         </div>
                     </div>

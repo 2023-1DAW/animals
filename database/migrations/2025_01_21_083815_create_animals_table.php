@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("name");
             $table->float("weight");
             $table->integer("age");
-            $table->text("description");
+            $table->text("description")->nullable();
             //$table->boolean("sick");
             $table->foreignId('vet_id')->nullable()->constrained();
         });

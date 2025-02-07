@@ -15,7 +15,7 @@ class AnimalController extends Controller
     public function index()
     {
         //1. Pido al modelo que busque todos los animales en la BD
-        $animals = Animal::all();   
+        $animals = Animal::all();
         //2. Creo una vista con dichos animales
         return view('animal.index', compact('animals'));
     }
@@ -26,7 +26,8 @@ class AnimalController extends Controller
     public function create()
     {
         // Aquí suministro una vista con un formulario en blanco de creación
-        //Buscar todos los veterinarios
+
+        //Buscar todos los veterinarios para pasárselos a la vista y que pueda rellenar el select
         $vets = Vet::all();
 
         //Se lo envío a la vista:
@@ -34,19 +35,12 @@ class AnimalController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guarda un modelo en la base de datos que se le pasa como parámetro POST
+     * @param \Illuminate\Http\Request $request Información de la petición POST
+     * @return \Illuminate\Http\RedirectResponse Redirección a la vista de index.
      */
     public function store(Request $request)
     {
-        //$description = $request->input('description');
-        //$input = $request->collect(['description','otra']);
-        //var_dump($request->input('otra'));
-        //var_dump($input);
-        //exit();
-        // Aquí guardo el modelo en la BD
-        //Animal::create($request->all());
-        //Animal::create($request->collect(['name','description','weight','age'])->toArray());
-
         //Primero tengo que crear el animal:
         $animal = Animal::create($request->all());
 
@@ -58,6 +52,13 @@ class AnimalController extends Controller
         $owner->animal()->associate($animal);
         $owner->save();
 
+        //Busco el veterinario en la base de datos:
+        $v = Vet::find($request->input('vets'));
+        if ($v != null) {
+            $animal->vet()->associate($v);
+            $animal->update();
+        }
+
         //Redirecciono a index
         return redirect()->route('animal.index')->with('success', 'Animal created');
     }
@@ -67,7 +68,6 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        //
         return view('animal.show', compact('animal'));
     }
 
@@ -76,7 +76,9 @@ class AnimalController extends Controller
      */
     public function edit(Animal $animal)
     {
-        return view('animal.edit', compact('animal'));
+        //Para editar necesito consultar todos los veterinarios, y pasárselos también a la vista para rellenar el select
+        $vets = Vet::all();
+        return view('animal.edit', compact('animal', 'vets'));
     }
 
     /**
@@ -84,9 +86,23 @@ class AnimalController extends Controller
      */
     public function update(Request $request, Animal $animal)
     {
-        
         //$request contiene los datos del formulario
+
+        //Obtengo el objeto Owner a través de su id (primary key) para editarlo con los datos del formulario
+        $o = Owner::find($animal->owner->id);
+        $o->name = $request->input('ownername');
+        $o->phone = $request->input('ownerphone');
+        $o->update();
+
+        //Busco el veterinario en la base de datos. Si existe, se lo asigno al atributo del animal
+        $v = Vet::find($request->input('vets'));
+        if ($v != null) {
+            $animal->vet()->associate($v);
+        }
+
+        //Actualizo animal con los datos del formulario
         $animal->update($request->all());
+
         //Reenviamos al index:
         return redirect()->route('animal.index')->with('success', 'Animal updated');
     }
@@ -97,7 +113,12 @@ class AnimalController extends Controller
     public function destroy(Animal $animal)
     {
         //Primero tengo que eliminar el propietario:
-        $animal->owner->delete();
+        if ($animal->owner != null) {
+            $animal->owner->delete();
+        }
+
+        //Elimino el animal
+        //(no hay que hacer nada con el veterinario, pues sigue existiendo aunque se eliminen sus animales asociados)
         $animal->delete();
         return redirect()->route('animal.index')->with('success', 'Animal deleted');
     }

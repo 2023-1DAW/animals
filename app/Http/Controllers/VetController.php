@@ -91,6 +91,7 @@ class VetController extends Controller
      */
     public function destroy(Vet $vet)
     {
-        //
+        $vet->delete();
+        return redirect()->route('vet.index')->with('success', 'Vet deleted');
     }
 }
