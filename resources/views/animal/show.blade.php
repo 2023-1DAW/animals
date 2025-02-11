@@ -12,7 +12,7 @@
 <body>
 
     @include('navbar')
-    
+
     <!-- contenido (formulario de edición del animal) -->
     <div class="container">
         <form action={{route('animal.index')}} method="post">
@@ -36,15 +36,21 @@
             </div>
             <div class="form-group">
                 <label for="ownername">Owner</label>
-                <input type="text" class="form-control" name="ownername" value="{{$animal->owner->name}} - Phone: {{$animal->owner->phone}}" disabled>
+                <input type="text" class="form-control" name="ownername"disabled
+                    value=@if ($animal->owner != null) {{$animal->owner->name}} - Phone: {{$animal->owner->phone}}
+                @endif >
             </div>
             <div class="form-group">
                 <label for="vet">Vet</label>
-                <input type="text" class="form-control" name="vet" value="{{$animal->vet->name}} - Email: {{$animal->vet->email}} - Phone: {{$animal->vet->phone}}" disabled>
+                <input type="text" class="form-control" name="vet" disabled
+                value= @if($animal->vet != null) {{$animal->vet->name}} 
+                - Email: {{$animal->vet->email}} 
+                - Phone: {{$animal->vet->phone}} @endif >
             </div>
             <button type="submit" class="btn btn-primary mt-3">Return</button>
         </form>
     </div>
 
 </body>
+
 </html>

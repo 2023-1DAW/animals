@@ -44,13 +44,15 @@ class AnimalController extends Controller
         //Primero tengo que crear el animal:
         $animal = Animal::create($request->all());
 
-        //Después tengo que crear el propietario:
-        //Opción 1: crear un objeto Owner, meterle en sus atributos los datos del formulario, guardar en bd
-        $owner = new Owner();
-        $owner->name = $request->input('ownername');
-        $owner->phone = $request->input('ownerphone');
-        $owner->animal()->associate($animal);
-        $owner->save();
+        if ($request->owner != null) {
+            //Después tengo que crear el propietario:
+            //Creo un objeto Owner, meterle en sus atributos los datos del formulario, guardar en bd
+            $owner = new Owner();
+            $owner->name = $request->input('ownername');
+            $owner->phone = $request->input('ownerphone');
+            $owner->animal()->associate($animal);
+            $owner->save();
+        }
 
         //Busco el veterinario en la base de datos:
         $v = Vet::find($request->input('vets'));
@@ -88,12 +90,20 @@ class AnimalController extends Controller
     {
         //$request contiene los datos del formulario
 
-        //Obtengo el objeto Owner a través de su id (primary key) para editarlo con los datos del formulario
-        $o = Owner::find($animal->owner->id);
-        $o->name = $request->input('ownername');
-        $o->phone = $request->input('ownerphone');
-        $o->update();
-
+        if ($animal->owner != null) {
+            //Obtengo el objeto Owner a través de su id (primary key) para editarlo con los datos del formulario
+            $o = Owner::find($animal->owner->id);
+            $o->name = $request->input('ownername');
+            $o->phone = $request->input('ownerphone');
+            $o->update();
+        } else if ($request->ownername != null) {
+            //El propietario no existía pero ahora se está creando uno nuevo:
+            $owner = new Owner();
+            $owner->name = $request->input('ownername');
+            $owner->phone = $request->input('ownerphone');
+            $owner->animal()->associate($animal);
+            $owner->save();
+        }
         //Busco el veterinario en la base de datos. Si existe, se lo asigno al atributo del animal
         $v = Vet::find($request->input('vets'));
         if ($v != null) {
