@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -14,3 +15,13 @@ Route::post('owner', [OwnerController::class, 'create']);
 Route::put('owner/{id}', [OwnerController::class, 'update']);
 
 Route::delete('owner/{id}', [OwnerController::class, 'delete']);
+
+//12feb
+//Cuando haga un GET a la url /student, se hace cargo de esa petición StudentController.index()
+Route::get('student', [StudentController::class, 'index']);
+//Ruta para añadir (POST) un student: /student, StudentController.store()
+Route::post('student', [StudentController::class, 'store']);
+//Ruta PUT (actualizar) un student: /student/XXXXXX, StudentController.update()
+Route::put('student/{id}', [StudentController::class, 'update']);
+Route::delete('student/{id}', [StudentController::class, 'delete']);
+Route::get('student/{id}', [StudentController::class, 'show']);
