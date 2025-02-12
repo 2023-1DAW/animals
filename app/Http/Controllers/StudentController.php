@@ -33,15 +33,16 @@ class StudentController extends Controller
         }
     }
 
-    public function update($id, Request $request){
-        try{
+    public function update($id, Request $request)
+    {
+        try {
             $s = Student::findOrFail($id);  //Si no lo encuentra, lanza excepción
             $s->update($request->all());
             return response()->json([
                 "message" => "Updated",
                 "data" => $s
             ]);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 "message" => "Error" . $e->getMessage(),
                 "data" => []
@@ -49,5 +50,33 @@ class StudentController extends Controller
         }
     }
 
-    
+    public function delete($id)
+    {
+        try {
+            $s = Student::findOrFail($id);
+            $s->delete();
+            return response()->json([
+                "data" => $s,
+                "message" => "Deleted"
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "data" => [],
+                "message" => "Nothing to delete"
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $s = Student::findOrFail($id);
+            return response()->json($s);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "Not found",
+                "data" => []
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
