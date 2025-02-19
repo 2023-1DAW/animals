@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Animal;
 use App\Models\Owner;
 use App\Models\Vet;
+use Exception;
+use Illuminate\Container\Attributes\DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class AnimalController extends Controller
 {
@@ -131,5 +135,102 @@ class AnimalController extends Controller
         //(no hay que hacer nada con el veterinario, pues sigue existiendo aunque se eliminen sus animales asociados)
         $animal->delete();
         return redirect()->route('animal.index')->with('success', 'Animal deleted');
+    }
+
+    public function indexRest()
+    {
+        $animals = Animal::with("owner", "vet")->get();
+        return response()->json($animals);
+    }
+
+    public function showByIdRest($id)
+    {
+        $a = Animal::with("owner", "vet")->find($id);  //Busco owner por id
+        
+
+        //Si se ha encontrado:
+        if ($a != null) {
+            return response()->json([
+                "data" => $a,
+                "message" => "OK"
+            ]);
+        } else {
+            //Si no se ha encontrado:
+            return response()->json([
+                "message" => "Animal not found"
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function createRest(Request $request)
+    {
+        try {
+            $a = Animal::create($request->all());
+            return response()->json([
+                "data" => $a,
+                "message" => "Created successfully"
+            ], JsonResponse::HTTP_CREATED); //201
+        } catch (Exception $e) {
+            //Si no se ha podido insertar (porque no tiene el campo "name"),
+            //respuesta JSON con error.
+            return response()->json([
+                "data" => "",
+                "message" => "Error " . $e->getMessage()    //Fase de desarrollo
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);   //500
+        }
+    }
+
+    public function updateRest($id, Request $request)
+    {
+        $a = Animal::find($id);
+        if ($a != null) {
+            $a->update($request->all());
+            $a->save();
+            return response()->json([
+                "data" => $a,
+                "message" => "Updated successfully"
+            ], JsonResponse::HTTP_CREATED); //201
+        } else {
+            return response()->json([
+                "data" => "",
+                "message" => "Error Animal not found"
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);   //500
+        }
+    }
+
+    public function deleteRest($id)
+    {
+        $num = Animal::destroy($id);
+        if ($num == 1) {
+            return response()->json([
+                "data" => [$id],
+                "message" => "Deleted successfully"
+            ]); //200
+        } else {
+            return response()->json([
+                "data" => [],
+                "message" => "Not found"
+            ], JsonResponse::HTTP_BAD_REQUEST); //400
+        }
+    }
+
+    public function showByNameRest($name)
+    {
+        //$a = FacadesDB::table("animals")->whereLike("name", "%". $name . "%")->get();
+        $animals = Animal::whereLike("name", "%" . $name . "%")->get();
+        return response()->json($animals);
+    }
+
+    //http://127.0.0.1:8000/api/animal?name=XXX&weight=YYY
+    public function showByNameRest2(Request $request)
+    {
+        //$a = FacadesDB::table("animals")->whereLike("name", "%". $name . "%")->get();
+        $animals = Animal::where(
+            [
+                ["name", "LIKE" , "%" . $request->name . "%"],
+                ["weight",">", $request->weight]
+            ]
+        )->get();
+        return response()->json($animals);
     }
 }
